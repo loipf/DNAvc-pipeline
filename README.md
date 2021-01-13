@@ -1,6 +1,6 @@
 # DNAvc pipeline
 
-a DNA variant calling pipeline from `.bam` files to `.vcf` files with stats report
+a DNA variant calling pipeline from indexed `.bam` files to `.vcf` files with stats report
 
 
 ---

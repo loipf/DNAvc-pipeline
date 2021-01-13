@@ -5,26 +5,28 @@ params.data_dir	= "$launchDir/data"
 
 
 
-// maybe outsource this script to simple bash 
-process DATA_ACQUISITION { 
-	storeDir params.data_dir, mode: "copy"  // DOES NOT WORK
+
+process INDEX_REFERENCE { 
+	publishDir "$params.data_dir", mode: "copy"
 
 	input:
-		path data_dir
-		val ensembl_release
+		path reference_genome
 
 	output:
-		path "Homo_sapiens.GRCh38.dna.alt.fa.gz", emit: reference_genome
-
+		path "${reference_genome}*", emit: reference_genome
+		path "oc_databases_version.txt"
 
 	shell:
 	'''
-	curl ftp://ftp.ensembl.org/pub/release-!{ensembl_release}/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.chromosome.MT.fa.gz > Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz
-
-#	  curl ftp://ftp.ensembl.org/pub/release-!{ensembl_release}/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz > Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz
-
+	gunzip -c !{reference_genome} > reference_genome_unzip.fa
+	samtools faidx reference_genome_unzip.fa -o !{reference_genome}.fai
+	
+	oc module ls -t annotator > oc_databases_version.txt  
 	'''
 }
+
+
+
 
 
 

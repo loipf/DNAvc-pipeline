@@ -15,6 +15,7 @@ RUN conda config --add channels conda-forge
 ### bioinformatic tools
 RUN conda install \
 		multiqc==1.9 \
+		samtools==1.11.0 \
 		bcftools==1.11 \
 		open-cravat==2.2.1
 

@@ -1,0 +1,12 @@
+/home/p302036/bin/nextflow run /data/bioinfo-fehrmann/projects_loipf/kallisto_test/kallisto-nf/main.nf --kallisto --table /data/bioinfo-fehrmann/projects_loipf/kallisto_test/data/nf_sample_ftp.csv --index /data/bioinfo-fehrmann/projects_loipf/kallisto_test/data/kallisto_transcripts.idx -resume
+
+
+nextflow run CGUTA/ANYseq --kallisto --table /data/bioinfo-fehrmann/projects_loipf/kallisto_test/data/nf_sample_ftp_part2.csv --index /data/bioinfo-fehrmann/projects_loipf/kallisto_test/data/kallisto_transcripts.idx -c /data/bioinfo-fehrmann/projects_loipf/kallisto_test/kallisto-nf/pg.config -resume
+
+
+rsync -avP /scratch/p302036/kallisto_run/processed/* /data/bioinfo-fehrmann/gado_rnaseq/kallisto_results/ 
+
+
+/home/stefan/tools/nextflow run main.nf
+-with-timeline report_time -with-report report_summary
+
