@@ -41,8 +41,8 @@ process VARIANT_CALLING {
 		path reference_genome
 
 	output:
-		tuple path("${sample_id}.g.vcf.gz"), path("${sample_id}.g.vcf.gz.tbi") , emit: global_vcf
-		tuple path("${sample_id}.vcf.gz"), path("${sample_id}.vcf.gz.tbi") , emit: vcf
+		tuple val("${sample_id}"), path("${sample_id}.g.vcf.gz"), path("${sample_id}.g.vcf.gz.tbi") , emit: global_vcf
+		tuple val("${sample_id}"), path("${sample_id}.vcf.gz"), path("${sample_id}.vcf.gz.tbi") , emit: vcf
 		path "${sample_id}.visual_report.html"
 
 	shell:
@@ -58,6 +58,41 @@ process VARIANT_CALLING {
 	'''
 }
 
+
+
+
+process VARIANT_CALLING_STATS { 
+	tag "$sample_id"
+	publishDir "$params.data_dir/variants_vcf", mode: "copy", overwrite: false, saveAs: { filename -> "${sample_id}/$filename" }
+
+	input:
+		tuple val(sample_id), path(vcf_file), path(vcf_file_index) 
+		val num_threads
+
+	output:
+		path "${sample_id}_vcfstats.txt", emit: vcf_stats
+
+	shell:
+	'''
+	bcftools stats -f PASS --threads !{num_threads} !{vcf_file} > !{sample_id}_vcfstats.txt
+	'''
+}
+
+
+process MULTIQC_VCF { 
+	publishDir "$params.data_dir/quality_reports", mode: "copy"
+
+	input:
+		path stat_files
+
+	output:
+		path "*"
+
+	shell:
+	'''
+	multiqc -f -o variants_vcf .
+	'''
+}
 
 
 

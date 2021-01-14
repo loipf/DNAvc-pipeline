@@ -14,6 +14,8 @@ nextflow.enable.dsl=2
 include { 
 	INDEX_REFERENCE;
 	VARIANT_CALLING;
+	VARIANT_CALLING_STATS;
+	MULTIQC_VCF
 } from './modules.nf' 
 
 
@@ -23,7 +25,7 @@ include {
  * default parameters
  */ 
 
-params.dev_samples = 1
+params.dev_samples = 3
 
 params.project_dir	= "$projectDir"
 params.reads_mapped_dir	= "$params.project_dir/data/reads_mapped" 
@@ -66,8 +68,11 @@ workflow {
 			.take( params.dev_samples )  // only consider a few files for debugging
 
 	INDEX_REFERENCE(params.reference_genome)
-	VARIANT_CALLING(channel_reads_mapped, params.num_threads, INDEX_REFERENCE.out.reference_genome)
 
+	VARIANT_CALLING(channel_reads_mapped, params.num_threads, INDEX_REFERENCE.out.reference_genome)
+	VARIANT_CALLING_STATS(VARIANT_CALLING.out.vcf, params.num_threads)
+
+	MULTIQC_VCF(VARIANT_CALLING_STATS.out.vcf_stats.collect())
 
 
 
