@@ -1,6 +1,8 @@
 # DNAvc pipeline
 
-a DNA variant calling pipeline from indexed `.bam` files to `.vcf` files with stats report
+a DNA variant calling pipeline from indexed `.bam` files to `.vcf` files with stats report.
+
+(DeepVariant currently optimised for Illumina WGS)
 
 
 ---
@@ -30,7 +32,7 @@ nextflow run main.nf
 or
 
 ```sh
-nextflow run loipf/DNAvc-pipeline --project_dir /path/to/folder --reads_dir /path/to/samples --num_threads 10 -with-docker dnavc-pipeline
+nextflow run loipf/DNAvc-pipeline --project_dir /path/to/folder --reads_mapped_dir /path/to/samples --num_threads 10 -with-docker dnavc-pipeline
 ```
 for this execution to work properly, you have to be in the current project directory.
 

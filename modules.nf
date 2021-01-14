@@ -7,23 +7,59 @@ params.data_dir	= "$launchDir/data"
 
 
 process INDEX_REFERENCE { 
-	publishDir "$params.data_dir", mode: "copy"
+	publishDir "$params.data_dir", mode: "copy", pattern:"oc_databases_version.txt"
 
 	input:
 		path reference_genome
 
 	output:
-		path "${reference_genome}*", emit: reference_genome
+		tuple path("*.fa"), path("*.fa.fai"), emit: reference_genome
 		path "oc_databases_version.txt"
 
 	shell:
 	'''
-	gunzip -c !{reference_genome} > reference_genome_unzip.fa
-	samtools faidx reference_genome_unzip.fa -o !{reference_genome}.fai
+	reference_name=!{reference_genome}
+	reference_name=${reference_name%.*}  # removes last file extension .gz
+
+	gunzip -c !{reference_genome} > $reference_name 
+	samtools faidx $reference_name -o $reference_name.fai
 	
-	oc module ls -t annotator > oc_databases_version.txt  
+	oc module ls -t annotator > oc_databases_version.txt  ### output OpenCRAVAT database versions
 	'''
 }
+
+
+
+process VARIANT_CALLING { 
+	container "google/deepvariant:1.1.0"
+	tag "$sample_id"
+	publishDir "$params.data_dir/variants_vcf", mode: "copy", pattern:"${sample_id}.{vcf.gz,vcf.gz.tbi,visual_report.html}", overwrite: false, saveAs: { filename -> "${sample_id}/$filename" }
+
+	input:
+		tuple val(sample_id), path(reads_mapped)
+		val num_threads
+		path reference_genome
+
+	output:
+		tuple path("${sample_id}.g.vcf.gz"), path("${sample_id}.g.vcf.gz.tbi") , emit: global_vcf
+		tuple path("${sample_id}.vcf.gz"), path("${sample_id}.vcf.gz.tbi") , emit: vcf
+		path "${sample_id}.visual_report.html"
+
+	shell:
+	'''
+	/opt/deepvariant/bin/run_deepvariant \
+		--model_type=WGS \
+		--ref=!{reference_genome[0]} \
+		--reads=!{reads_mapped[0]} \
+		--output_vcf=!{sample_id}.vcf.gz \
+		--output_gvcf=!{sample_id}.g.vcf.gz \
+		--num_shards=!{num_threads} \
+		--vcf_stats_report=true
+	'''
+}
+
+
+
 
 
 

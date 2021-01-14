@@ -13,6 +13,7 @@ nextflow.enable.dsl=2
 
 include { 
 	INDEX_REFERENCE;
+	VARIANT_CALLING;
 } from './modules.nf' 
 
 
@@ -59,13 +60,13 @@ reference_genome	: $params.reference_genome
  * main pipeline logic
  */
 workflow {
-	channel_reads = Channel
+	channel_reads_mapped = Channel
 			.fromFilePairs( params.reads_mapped )
 			.ifEmpty { error "cannot find any reads matching: ${params.reads_mapped}" }
 			.take( params.dev_samples )  // only consider a few files for debugging
 
 	INDEX_REFERENCE(params.reference_genome)
-
+	VARIANT_CALLING(channel_reads_mapped, params.num_threads, INDEX_REFERENCE.out.reference_genome)
 
 
 
