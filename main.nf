@@ -16,6 +16,7 @@ include {
 	VARIANT_CALLING;
 	VARIANT_MERGING;
 	GLNEXUS_BCF_TO_VCF;
+	VARIANT_ANNOTATION;
 	VARIANT_CALLING_STATS;
 	MULTIQC_VCF
 } from './modules.nf' 
@@ -72,13 +73,14 @@ workflow {
 	INDEX_REFERENCE(params.reference_genome)
 
 	VARIANT_CALLING(channel_reads_mapped, params.num_threads, INDEX_REFERENCE.out.reference_genome)
+	VARIANT_CALLING_STATS(VARIANT_CALLING.out.vcf, params.num_threads)
+	MULTIQC_VCF(VARIANT_CALLING_STATS.out.vcf_stats.collect())
 	
 	VARIANT_MERGING(VARIANT_CALLING.out.global_vcf.collect(), params.num_threads)
 	GLNEXUS_BCF_TO_VCF(VARIANT_MERGING.out.glnexus_bcf, params.num_threads)
 
+	VARIANT_ANNOTATION(GLNEXUS_BCF_TO_VCF.out.pvcf_file, params.num_threads)
 
-//	VARIANT_CALLING_STATS(VARIANT_CALLING.out.vcf, params.num_threads)
-//	MULTIQC_VCF(VARIANT_CALLING_STATS.out.vcf_stats.collect())
 
 
 

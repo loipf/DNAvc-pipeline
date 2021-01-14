@@ -58,7 +58,7 @@ oc module install -y target mutpanning pharmgkb cancer_hotspots cgl litvar ncRNA
 
 oc run ./example_input -l hg38
 
-
+oc run -l hg38 -t csv -x --mp 4 pvcf_all_glnexus.vcf.gz
 
 
 
