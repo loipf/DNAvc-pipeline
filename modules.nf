@@ -5,7 +5,6 @@ params.data_dir	= "$launchDir/data"
 
 
 
-
 process INDEX_REFERENCE { 
 	publishDir "$params.data_dir", mode: "copy", pattern:"oc_databases_version.txt"
 
@@ -41,8 +40,8 @@ process VARIANT_CALLING {
 		path reference_genome
 
 	output:
-		tuple val("${sample_id}"), path("${sample_id}.g.vcf.gz"), path("${sample_id}.g.vcf.gz.tbi") , emit: global_vcf
 		tuple val("${sample_id}"), path("${sample_id}.vcf.gz"), path("${sample_id}.vcf.gz.tbi") , emit: vcf
+		path "${sample_id}.g.vcf.gz" , emit: global_vcf
 		path "${sample_id}.visual_report.html"
 
 	shell:
@@ -59,6 +58,40 @@ process VARIANT_CALLING {
 }
 
 
+process VARIANT_MERGING { 
+	container "quay.io/mlin/glnexus:v1.2.7"
+	publishDir "$params.data_dir/variants_vcf/_all", mode: "copy", pattern:"GLnexus.DB", overwrite: true 
+
+	input:
+		path global_vcf_files
+		val num_threads
+
+	output:
+		path "*"
+		path "pvcf_all_glnexus.bcf", emit: glnexus_bcf
+
+	shell:
+	'''
+	bash -c "glnexus_cli --threads !{num_threads} --config DeepVariant !{global_vcf_files}" > pvcf_all_glnexus.bcf
+	'''
+}
+
+
+process GLNEXUS_BCF_TO_VCF { 
+	publishDir "$params.data_dir/variants_vcf/_all", mode: "copy", overwrite: true 
+
+	input:
+		path bcf_file
+		val num_threads
+
+	output:
+		path "pvcf_all_glnexus.vcf.gz"
+
+	shell:
+	'''
+	bcftools view !{bcf_file} | bgzip -@ !{num_threads} -c > pvcf_all_glnexus.vcf.gz
+	'''
+}
 
 
 process VARIANT_CALLING_STATS { 
