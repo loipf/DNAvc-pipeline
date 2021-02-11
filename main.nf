@@ -81,32 +81,13 @@ workflow {
 
 	VARIANT_ANNOTATION(GLNEXUS_BCF_TO_VCF.out.pvcf_file, params.num_threads)
 
-
-
-
-	// // DATA_ACQUISITION(params.data_dir, params.ensembl_release)  # STOREDIR DOES NOT WORK
-	// PREPROCESS_READS(channel_reads, params.num_threads, params.adapter_seq_file)
-	// channel_reads_prepro = PREPROCESS_READS.out.reads_prepro.map{ it -> tuple(it[0], tuple(it[1], it[2])) }
-
-	// FASTQC_READS_RAW(channel_reads, params.num_threads, params.adapter_seq_file)
-	// FASTQC_READS_PREPRO(channel_reads_prepro, params.num_threads, params.adapter_seq_file)
-
-	// MAPPING_BWA(channel_reads_prepro, params.num_threads, params.reference_genome, CREATE_BWA_INDEX.out.bwa_index.collect())
-
-	// DEEPTOOLS_ANALYSIS(MAPPING_BWA.out.reads_mapped.collect(), MAPPING_BWA.out.reads_mapped_index.collect(), params.num_threads)
-
-	// MULTIQC_RAW(FASTQC_READS_RAW.out.reports.collect() )
-	// MULTIQC_PREPRO(FASTQC_READS_PREPRO.out.reports.concat(PREPROCESS_READS.out.cutadapt).collect() )
-	// MULTIQC_MAPPED(MAPPING_BWA.out.all.concat(DEEPTOOLS_ANALYSIS.out.all).collect())
-	
-
 }
 
 
 
 
-//workflow.onComplete { 
-//	println ( workflow.success ? "\ndone! check the quality reports in --> $params.data_dir/quality_reports\n" : "oops .. something went wrong" ) } 
+workflow.onComplete { 
+	println ( workflow.success ? "\ndone! check the quality reports in --> $params.data_dir/quality_reports\n" : "oops .. something went wrong" ) } 
 
 
 

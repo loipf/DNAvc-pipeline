@@ -151,17 +151,3 @@ process VARIANT_ANNOTATION {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
