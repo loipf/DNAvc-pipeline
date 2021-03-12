@@ -28,7 +28,7 @@ include {
  * default parameters
  */ 
 
-params.dev_samples = 3
+params.dev_samples = -1
 
 params.project_dir	= "$projectDir"
 params.reads_mapped_dir	= "$params.project_dir/data/reads_mapped" 
