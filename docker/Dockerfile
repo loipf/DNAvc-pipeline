@@ -22,6 +22,7 @@ RUN conda install \
 
 
 ### set up open-cravat
+RUN oc module install -y install-base
 RUN oc module install -y csvreporter vcfreporter 
 RUN oc module install -y hg38
 #RUN oc module install -y clinvar cancer_genome_interpreter go target   ### small test
