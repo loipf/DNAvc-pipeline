@@ -30,7 +30,7 @@ process INDEX_REFERENCE {
 
 
 process VARIANT_CALLING { 
-	container "google/deepvariant:1.1.0"
+	container "google/deepvariant:1.2.0"
 	tag "$sample_id"
 	publishDir "$params.data_dir/variants_vcf", mode: "copy", pattern:"${sample_id}.{vcf.gz,vcf.gz.tbi,visual_report.html}", overwrite: false, saveAs: { filename -> "${sample_id}/$filename" }
 
@@ -59,7 +59,7 @@ process VARIANT_CALLING {
 
 
 process VARIANT_MERGING { 
-	container "quay.io/mlin/glnexus:v1.2.7"
+	container "ghcr.io/dnanexus-rnd/glnexus:v1.4.1"
 	publishDir "$params.data_dir/variants_vcf/_all", mode: "copy", pattern:"GLnexus.DB", overwrite: false
 
 	input:

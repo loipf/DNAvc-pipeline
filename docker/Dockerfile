@@ -18,7 +18,7 @@ RUN conda install \
 		samtools==1.11.0 \
 		bcftools==1.11 \
 		pyvcf==0.6.8 \
-		open-cravat==2.2.1
+		open-cravat==2.2.5
 
 
 ### set up open-cravat
