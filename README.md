@@ -30,7 +30,7 @@ nextflow run main.nf
 or
 
 ```sh
-nextflow run loipf/DNAvc-pipeline -r v1.0 --project_dir /path/to/folder --reads_mapped_dir /path/to/samples --num_threads 10 -with-docker dnavc-pipeline
+nextflow run loipf/DNAvc-pipeline -r v1.0 --project_dir /path/to/folder --reads_mapped_dir /path/to/samples --reference_genome /path/to/ref --num_threads 10 -with-docker dnavc-pipeline
 ```
 for this execution to work properly, you have to be in the current project directory.
 
@@ -44,7 +44,8 @@ optional extendable with:
 ```
 
 
-by default, all output will be saved into the `data` folder of the current directory
+by default, all output will be saved into the `data` folder of the current directory.
+mapped `.bam` files must already be indexed.
 
 
 
