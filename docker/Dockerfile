@@ -27,7 +27,7 @@ RUN oc module install -y csvreporter vcfreporter
 RUN oc module install -y hg38
 #RUN oc module install -y clinvar cancer_genome_interpreter go target   ### small test
 
-RUN oc module install -y clinvar dbsnp cosmic cosmic_gene cancer_genome_interpreter go gnomad gwas_catalog
+RUN oc module install -y clinvar dbsnp cosmic cosmic_gene cancer_genome_interpreter go gnomad3 gwas_catalog
 RUN oc module install -y target pharmgkb cancer_hotspots cgl litvar ncRNA genehancer omim chasmplus_BRCA
 
 
