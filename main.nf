@@ -80,7 +80,7 @@ workflow {
 	VARIANT_MERGING(VARIANT_CALLING.out.global_vcf.collect(), params.num_threads)
 	GLNEXUS_BCF_TO_VCF(VARIANT_MERGING.out.glnexus_bcf, params.num_threads)
 
-	//VARIANT_ANNOTATION(GLNEXUS_BCF_TO_VCF.out.pvcf_file, params.num_threads)
+	VARIANT_ANNOTATION(GLNEXUS_BCF_TO_VCF.out.pvcf_file, params.num_threads)
 
 }
 

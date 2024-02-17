@@ -23,7 +23,7 @@ process INDEX_REFERENCE {
 	gunzip -c !{reference_genome} > $reference_name 
 	samtools faidx $reference_name -o $reference_name.fai
 	
-	#oc module ls -t annotator > oc_databases_version.txt  ### output OpenCRAVAT database versions
+	oc module ls -t annotator > oc_databases_version.txt  ### output OpenCRAVAT database versions
 	'''
 }
 
