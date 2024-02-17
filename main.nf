@@ -34,7 +34,7 @@ params.project_dir	= "$projectDir"
 params.reads_mapped_dir	= "$params.project_dir/data/reads_mapped" 
 
 params.reads_mapped	= "$params.reads_mapped_dir/*/*.{bam,bam.bai}"
-params.data_dir		= "$params.project_dir/data"
+params.data_dir	= "$params.project_dir/data"
 params.scripts_dir	= "$params.project_dir/scripts"
 
 
@@ -44,6 +44,7 @@ params.scripts_dir	= "$params.project_dir/scripts"
 
 params.num_threads		= 3
 params.reference_genome	= "$params.project_dir/data/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz"
+params.bed_region_file		= "Homo_sapiens.GRCh38.cdna.all.bed"
 
 
 
@@ -72,14 +73,14 @@ workflow {
 
 	INDEX_REFERENCE(params.reference_genome)
 
-	VARIANT_CALLING(channel_reads_mapped, params.num_threads, INDEX_REFERENCE.out.reference_genome)
+	VARIANT_CALLING(channel_reads_mapped, params.num_threads, INDEX_REFERENCE.out.reference_genome, params.bed_region_file)
 	VARIANT_CALLING_STATS(VARIANT_CALLING.out.vcf, params.num_threads)
 	MULTIQC_VCF(VARIANT_CALLING_STATS.out.vcf_stats.collect())
 	
 	VARIANT_MERGING(VARIANT_CALLING.out.global_vcf.collect(), params.num_threads)
 	GLNEXUS_BCF_TO_VCF(VARIANT_MERGING.out.glnexus_bcf, params.num_threads)
 
-	VARIANT_ANNOTATION(GLNEXUS_BCF_TO_VCF.out.pvcf_file, params.num_threads)
+	//VARIANT_ANNOTATION(GLNEXUS_BCF_TO_VCF.out.pvcf_file, params.num_threads)
 
 }
 

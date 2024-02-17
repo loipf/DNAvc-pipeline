@@ -12,8 +12,8 @@ a DNA variant calling pipeline from indexed `.bam` files to `.vcf` files with st
 before running, you have to set up the attached Docker image which includes OpenCRAVAT and 2 others (all will take quite some time and overall need >50 GB of memory, you can add/remove OpenCRAVAT modules according to your needs in the Dockerfile, currently adapted for breast cancer):
 ```sh
 docker build -t dnavc-pipeline https://raw.githubusercontent.com/loipf/DNAvc-pipeline/master/docker/Dockerfile
-docker pull google/deepvariant:1.2.0
-docker pull quay.io/mlin/glnexus:v1.2.7
+docker pull google/deepvariant:1.6.0
+docker pull quay.io/mlin/glnexus:v1.4.3
 ```
 
 now either replace the Docker container hash (last output line from previous build command) in `nextflow.config` or run nextflow with the `-with-docker dnavc-pipeline` argument.

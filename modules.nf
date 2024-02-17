@@ -23,14 +23,14 @@ process INDEX_REFERENCE {
 	gunzip -c !{reference_genome} > $reference_name 
 	samtools faidx $reference_name -o $reference_name.fai
 	
-	oc module ls -t annotator > oc_databases_version.txt  ### output OpenCRAVAT database versions
+	#oc module ls -t annotator > oc_databases_version.txt  ### output OpenCRAVAT database versions
 	'''
 }
 
 
 
 process VARIANT_CALLING { 
-	container "google/deepvariant:1.2.0"
+	container "google/deepvariant:1.6.0"
 	tag "$sample_id"
 	publishDir "$params.data_dir/variants_vcf", mode: "copy", pattern:"${sample_id}.{vcf.gz,vcf.gz.tbi,visual_report.html}", overwrite: false, saveAs: { filename -> "${sample_id}/$filename" }
 
@@ -38,6 +38,7 @@ process VARIANT_CALLING {
 		tuple val(sample_id), path(reads_mapped)
 		val num_threads
 		path reference_genome
+		path bed_region_file
 
 	output:
 		tuple val("${sample_id}"), path("${sample_id}.vcf.gz"), path("${sample_id}.vcf.gz.tbi") , emit: vcf
@@ -47,8 +48,9 @@ process VARIANT_CALLING {
 	shell:
 	'''
 	/opt/deepvariant/bin/run_deepvariant \
-		--model_type=WGS \
+		--model_type=WES \
 		--ref=!{reference_genome[0]} \
+		--regions=!{bed_region_file}\
 		--reads=!{reads_mapped[0]} \
 		--output_vcf=!{sample_id}.vcf.gz \
 		--output_gvcf=!{sample_id}.g.vcf.gz \
@@ -59,7 +61,7 @@ process VARIANT_CALLING {
 
 
 process VARIANT_MERGING { 
-	container "ghcr.io/dnanexus-rnd/glnexus:v1.4.1"
+	container "ghcr.io/dnanexus-rnd/glnexus:v1.4.3"
 	publishDir "$params.data_dir/variants_vcf/_all", mode: "copy", pattern:"GLnexus.DB", overwrite: false
 
 	input:
