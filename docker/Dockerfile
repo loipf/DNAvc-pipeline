@@ -18,7 +18,7 @@ RUN conda install \
 		samtools==1.11.0 \
 		bcftools==1.11 \
 		pyvcf==0.6.8 \
-		open-cravat==2.2.5
+		open-cravat==2.4.2
 
 
 ### set up open-cravat
@@ -29,6 +29,7 @@ RUN oc module install -y hg38
 
 RUN oc module install -y clinvar dbsnp cosmic cosmic_gene cancer_genome_interpreter go gnomad3 gwas_catalog
 RUN oc module install -y target pharmgkb cancer_hotspots cgl litvar ncRNA genehancer omim chasmplus_BRCA
+RUN oc module install -y segway_blood alphamissense
 
 
 
