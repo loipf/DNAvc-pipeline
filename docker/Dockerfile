@@ -1,4 +1,4 @@
-FROM conda/miniconda3@sha256:2141bfc4b60cc5eb332402207c80d884daa72fcefa48b50f3ccadd934d1f3d03
+FROM continuumio/miniconda3@sha256:cea2f5114fdbeb2303f55ffe96cc0f4170472f7a959e564649b9adb0127f09d7
 
 MAINTAINER loipf
 
@@ -14,11 +14,11 @@ RUN conda config --add channels conda-forge
 
 ### bioinformatic tools
 RUN conda install \
-		multiqc==1.9 \
-		samtools==1.11.0 \
-		bcftools==1.11 \
-		pyvcf==0.6.8 \
-		open-cravat==2.4.2
+		multiqc>=1.9 \
+		samtools>=1.11.0 \
+		bcftools>=1.11 \
+		pyvcf>=0.6.8 \
+		open-cravat>=2.4.2
 
 
 ### set up open-cravat
