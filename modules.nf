@@ -50,11 +50,11 @@ process VARIANT_CALLING {
 	/opt/deepvariant/bin/run_deepvariant \
 		--model_type=WES \
 		--ref=!{reference_genome[0]} \
-		--regions=!{bed_region_file}\
 		--reads=!{reads_mapped[0]} \
 		--output_vcf=!{sample_id}.vcf.gz \
 		--output_gvcf=!{sample_id}.g.vcf.gz \
 		--num_shards=!{num_threads} \
+		--regions=!{bed_region_file} \
 		--vcf_stats_report=true
 	'''
 }
@@ -143,7 +143,9 @@ process VARIANT_ANNOTATION {
 
 	shell:
 	'''
-	oc run -l hg38 -t csv -x --mp !{num_threads} !{pvcf_glnexus}
+	# oc run -l hg38 -t csv -x --mp !{num_threads} !{pvcf_glnexus}  
+	### weird problem where no annotator is added although they are installed
+	oc run -l hg38 -a alphamissense cancer_genome_interpreter cancer_hotspots cgl chasmplus_BRCA clinvar cosmic cosmic_gene dbsnp genehancer gnomad3 go gwas_catalog litvar omim pharmgkb segway_blood target -t csv -x --mp !{num_threads} !{pvcf_glnexus}
 	'''
 }
 
